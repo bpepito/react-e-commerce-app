@@ -1,36 +1,113 @@
 import React, { useState } from "react";
-import Counter from "./components/Counter";
+import NavBar from "./components/NavBar";
 import Counters from "./components/Counters";
-import { createTheme } from "@mui/material/styles";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { AppProvider } from "@toolpad/core/AppProvider";
-import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import { useDemoRouter } from "@toolpad/core/internal";
+import OrderPage from "./components/OrderPage";
+import { CART_DATA } from "./data/Cart";
 import { PRODUCTS_DATA } from "./data/Products";
 
-const NAVIGATION = [
-  {
-    segment: "dashboard",
-    title: "Dashboard",
-    icon: <DashboardIcon />,
-  },
-  {
-    segment: "orders",
-    title: "Orders",
-    icon: <ShoppingCartIcon />,
-  },
-];
+function App() {
+  const [cart, setCart] = useState(CART_DATA);
+  const [showOrderPage, setShowOrderPage] = useState(false);
 
-function App(props) {
-  const [products, setProducts] = React.useState([PRODUCTS_DATA]);
-  console.log(products);
+  const handleIncrementItemCount = (product) => {
+    setCart((prev) => {
+      const existingItem = prev.find((item) => item.id === product.id);
+      if (existingItem) {
+        return prev.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                itemCount: item.itemCount + 1,
+                totalPrice: (item.itemCount + 1) * item.price,
+              }
+            : item
+        );
+      } else {
+        return [
+          ...prev,
+          { ...product, itemCount: 1, totalPrice: product.price },
+        ];
+      }
+    });
+  };
+
+  const handleDecrementItemCount = (product) => {
+    setCart((prev) => {
+      const existingItem = prev.find((item) => item.id === product.id);
+      if (existingItem) {
+        if (existingItem.itemCount > 1) {
+          return prev.map((item) =>
+            item.id === product.id
+              ? {
+                  ...item,
+                  itemCount: item.itemCount - 1,
+                  totalPrice: (item.itemCount - 1) * item.price,
+                }
+              : item
+          );
+        } else {
+          return prev.filter((item) => item.id !== product.id);
+        }
+      }
+      return prev;
+    });
+  };
+
+  const handleUpdateItemCount = (product, newCount) => {
+    setCart((prev) => {
+      const existingItem = prev.find((item) => item.id === product.id);
+      if (existingItem) {
+        if (newCount > 0) {
+          return prev.map((item) =>
+            item.id === product.id
+              ? {
+                  ...item,
+                  itemCount: newCount,
+                  totalPrice: newCount * product.price,
+                }
+              : item
+          );
+        } else {
+          return prev.filter((item) => item.id !== product.id);
+        }
+      } else if (newCount > 0) {
+        return [
+          ...prev,
+          {
+            ...product,
+            itemCount: newCount,
+            totalPrice: newCount * product.price,
+          },
+        ];
+      }
+      return prev;
+    });
+  };
+
+  const navigateToOrderPage = () => {
+    setShowOrderPage(true);
+  };
+
+  const navigateToMainPage = () => {
+    setShowOrderPage(false);
+  };
 
   return (
     <>
-      <div>
-        <Counters products={products}></Counters>
-      </div>
+      {showOrderPage ? (
+        <OrderPage cart={cart} navigateToMainPage={navigateToMainPage} />
+      ) : (
+        <>
+          <NavBar cart={cart} navigateToOrderPage={navigateToOrderPage} />
+          <Counters
+            products={PRODUCTS_DATA}
+            incrementCount={handleIncrementItemCount}
+            decrementCount={handleDecrementItemCount}
+            updateCart={handleUpdateItemCount}
+            cart={cart}
+          />
+        </>
+      )}
     </>
   );
 }
