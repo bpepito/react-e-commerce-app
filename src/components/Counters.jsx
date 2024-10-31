@@ -19,7 +19,7 @@ const Counters = ({
             product={product}
             incrementCount={incrementCount}
             decrementCount={decrementCount}
-            upddateCart={updateCart}
+            updateCart={updateCart}
             cart={cart}
           ></Counter>
         </div>

@@ -19,21 +19,21 @@ const OrderPage = ({ cart, navigateToMainPage }) => {
       label: "Quantity",
       minWidth: 80,
       align: "right",
-      format: (value) => value.toLocaleString("en-US"),
+      format: (value) => value,
     },
     {
       id: "price",
       label: "Unit",
       minWidth: 80,
       align: "right",
-      format: (value) => value.toLocaleString("en-US"),
+      format: (value) => `₱ ${parseFloat(value).toFixed(2)}`,
     },
     {
       id: "totalPrice",
       label: "Price",
       minWidth: 100,
       align: "right",
-      format: (value) => value.toLocaleString("en-US"),
+      format: (value) => `₱ ${parseFloat(value).toFixed(2)}`,
     },
   ];
 
@@ -57,7 +57,7 @@ const OrderPage = ({ cart, navigateToMainPage }) => {
           <HomeIcon style={{ fontSize: "30px", color: "white" }} />
         </Button>
       </div>
-      <div className="row d-flex flex-row justify-content-center align-items-center mt-3">
+      <div className="row d-flex flex-row justify-content-center align-items-center mt-3 ">
         <Paper sx={{ width: "70%" }}>
           <TableContainer sx={{ maxHeight: 440 }}>
             <Table stickyHeader aria-label="sticky table">
@@ -83,7 +83,11 @@ const OrderPage = ({ cart, navigateToMainPage }) => {
                     <TableCell
                       key={column.id}
                       align={column.align}
-                      style={{ top: 57, minWidth: column.minWidth }}
+                      style={{
+                        top: 57,
+                        minWidth: column.minWidth,
+                        fontWeight: "bolder",
+                      }}
                     >
                       {column.label}
                     </TableCell>
@@ -93,12 +97,7 @@ const OrderPage = ({ cart, navigateToMainPage }) => {
               <TableBody>
                 {rows.map((row) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.id} // Assuming each row has a unique id
-                    >
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                       {columns.map((column) => {
                         const value = row[column.id];
                         return (
@@ -118,7 +117,7 @@ const OrderPage = ({ cart, navigateToMainPage }) => {
                     Subtotal
                   </TableCell>
                   <TableCell align="center" style={{ fontSize: "20px" }}>
-                    ₱ {parseFloat(subTotal).toFixed(2)}
+                    {`₱ ${parseFloat(subTotal).toFixed(2)}`}
                   </TableCell>
                 </TableRow>
               </TableBody>

@@ -1,12 +1,14 @@
-import React from "react";
-import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Typography,
+  Input,
+  CardMedia,
+} from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { Input } from "@mui/material";
 
 const Counter = ({
   product,
@@ -16,45 +18,60 @@ const Counter = ({
   updateCart,
 }) => {
   const itemCount = cart.find((item) => item.id === product.id)?.itemCount || 0;
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [inputValue, setInputValue] = useState(itemCount.toString());
+
+  useEffect(() => {
+    setInputValue(itemCount.toString());
+  }, [itemCount]);
 
   const handleIncrement = () => {
+    const newCount = itemCount + 1;
     incrementCount({
       ...product,
-      itemCount: itemCount + 1,
-      totalPrice: (itemCount + 1) * product.price,
+      itemCount: newCount,
+      totalPrice: newCount * product.price,
     });
   };
 
   const handleDecrement = () => {
     if (itemCount > 0) {
+      const newCount = itemCount - 1;
       decrementCount({
         ...product,
-        itemCount: itemCount - 1,
-        totalPrice: (itemCount - 1) * product.price,
+        itemCount: newCount,
+        totalPrice: newCount * product.price,
       });
     }
   };
 
-  // Handle input changes
   const handleChange = (event) => {
     const value = event.target.value;
 
-    // Allow empty input
-    if (value === "") {
-      updateCart(product, 0);
-      return;
-    }
+    if (/^\d*$/.test(value)) {
+      setInputValue(value);
+      const newCount = value === "" ? 0 : parseInt(value, 10);
 
-    const newCount = parseInt(value, 10);
-    if (!isNaN(newCount) && newCount >= 0) {
-      updateCart(product, newCount);
+      if (newCount >= 1 && newCount <= product.rating.count) {
+        setErrorMessage("");
+        updateCart(product, newCount);
+      } else if (newCount > product.rating.count) {
+        setErrorMessage(
+          `Please enter a number between 1 - ${product.rating.count}.`
+        );
+      } else {
+        setErrorMessage("");
+      }
+    } else {
+      setErrorMessage("Please enter digits only.");
     }
   };
 
   return (
     <Card
       sx={{ maxWidth: "250px", marginTop: "10px" }}
-      className="shadow p-1 mb-2 bg-body-tertiary rounded mui-card"
+      className="shadow p-1 mb-2 bg-body-tertiary rounded"
     >
       <CardContent>
         <Typography
@@ -84,20 +101,17 @@ const Counter = ({
         />
         <Typography
           variant="body2"
-          sx={{
-            color: "text.secondary",
-            paddingTop: "5px",
-            height: "72px",
-          }}
+          sx={{ color: "text.secondary", paddingTop: "5px", height: "72px" }}
         >
           {product.description.length > 125
             ? `${product.description.slice(0, 125)}...`
             : product.description}
         </Typography>
       </CardContent>
+
       <CardActions
         className="d-flex flex-row justify-content-center align-items-center"
-        style={{ paddingTop: "35px", paddingBottom: "18px" }}
+        style={{ paddingTop: "30px", paddingBottom: "18px" }}
       >
         {itemCount > 0 ? (
           <>
@@ -110,19 +124,14 @@ const Counter = ({
               -
             </Button>
             <Input
-              value={itemCount}
+              type="text"
+              value={inputValue}
               onChange={handleChange}
-              style={{
-                borderColor: "lightgray",
-                width: "70px",
-              }}
+              style={{ borderColor: "lightgray", width: "70px" }}
               inputProps={{
                 style: { textAlign: "center" },
-                step: 1,
-                min: 0,
-                max: product.rating.count,
               }}
-            ></Input>
+            />
             <Button
               size="small"
               variant="contained"
@@ -141,7 +150,7 @@ const Counter = ({
               incrementCount({
                 ...product,
                 itemCount: 1,
-                totalPrice: 1 * product.price,
+                totalPrice: product.price,
               });
             }}
           >
@@ -152,6 +161,18 @@ const Counter = ({
           </Button>
         )}
       </CardActions>
+      {errorMessage && (
+        <p
+          style={{
+            color: "red",
+            fontSize: "12px",
+            textAlign: "center",
+            marginTop: "1px",
+          }}
+        >
+          {errorMessage}
+        </p>
+      )}
     </Card>
   );
 };

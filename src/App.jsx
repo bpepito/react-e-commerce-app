@@ -56,6 +56,7 @@ function App() {
   const handleUpdateItemCount = (product, newCount) => {
     setCart((prev) => {
       const existingItem = prev.find((item) => item.id === product.id);
+
       if (existingItem) {
         if (newCount > 0) {
           return prev.map((item) =>
@@ -80,6 +81,7 @@ function App() {
           },
         ];
       }
+
       return prev;
     });
   };
