@@ -6,10 +6,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import HomeIcon from "@mui/icons-material/Home";
-import Button from "@mui/material/Button";
 
-const OrderPage = ({ cart, navigateToMainPage }) => {
+const OrderPage = ({ cart }) => {
   const subTotal = cart.reduce((acc, item) => acc + item.totalPrice, 0);
 
   const columns = [
@@ -41,22 +39,6 @@ const OrderPage = ({ cart, navigateToMainPage }) => {
 
   return (
     <>
-      <div
-        className="d-flex flex-row justify-content-between align-items-center"
-        style={{
-          height: "60px",
-          backgroundColor: "#008080",
-          fontWeight: "bolder",
-          fontSize: "30px",
-        }}
-      >
-        <span style={{ marginLeft: "20px", color: "white" }}>
-          E-Commerce App
-        </span>
-        <Button onClick={navigateToMainPage} style={{ marginRight: "30px" }}>
-          <HomeIcon style={{ fontSize: "30px", color: "white" }} />
-        </Button>
-      </div>
       <div className="row d-flex flex-row justify-content-center align-items-center mt-3 ">
         <Paper sx={{ width: "70%" }}>
           <TableContainer sx={{ maxHeight: 440 }}>

@@ -78,7 +78,7 @@ const Counter = ({
           gutterBottom
           variant="body1"
           component="div"
-          style={{ height: "46px" }}
+          style={{ height: "46px", fontSize: "13px" }}
         >
           {product.title.length > 43
             ? `${product.title.slice(0, 43)}...`
@@ -88,7 +88,7 @@ const Counter = ({
           gutterBottom
           variant="body2"
           component="div"
-          style={{ color: "lightgray" }}
+          style={{ color: "lightgray", fontSize: "11px", marginTop: "-10px" }}
         >
           ₱ {product.price}
         </Typography>
@@ -101,17 +101,21 @@ const Counter = ({
         />
         <Typography
           variant="body2"
-          sx={{ color: "text.secondary", paddingTop: "5px", height: "72px" }}
+          sx={{
+            color: "text.secondary",
+            paddingTop: "5px",
+            height: "72px",
+            fontSize: "10px",
+          }}
         >
           {product.description.length > 125
             ? `${product.description.slice(0, 125)}...`
             : product.description}
         </Typography>
       </CardContent>
-
       <CardActions
         className="d-flex flex-row justify-content-center align-items-center"
-        style={{ paddingTop: "30px", paddingBottom: "18px" }}
+        style={{ marginTop: "-30px", paddingBottom: "20px" }}
       >
         {itemCount > 0 ? (
           <>
@@ -127,7 +131,11 @@ const Counter = ({
               type="text"
               value={inputValue}
               onChange={handleChange}
-              style={{ borderColor: "lightgray", width: "70px" }}
+              style={{
+                borderColor: "lightgray",
+                width: "70px",
+                fontSize: "12px",
+              }}
               inputProps={{
                 style: { textAlign: "center" },
               }}
@@ -155,7 +163,7 @@ const Counter = ({
             }}
           >
             <AddShoppingCartIcon
-              style={{ fontSize: "15px", marginRight: "5px" }}
+              style={{ fontSize: "10px", marginRight: "5px" }}
             />
             Add to Cart
           </Button>

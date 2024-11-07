@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import NavBar from "./components/NavBar";
 import Counters from "./components/Counters";
 import OrderPage from "./components/OrderPage";
+import ProductListPage from "./components/ProductListPage";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { CART_DATA } from "./data/Cart";
 import { PRODUCTS_DATA } from "./data/Products";
+import ProductForm from "./components/ProductForm";
 
 function App() {
   const [cart, setCart] = useState(CART_DATA);
-  const [showOrderPage, setShowOrderPage] = useState(false);
+  const [products, setProducts] = useState(PRODUCTS_DATA);
 
   const handleIncrementItemCount = (product) => {
     setCart((prev) => {
@@ -85,31 +88,69 @@ function App() {
     });
   };
 
-  const navigateToOrderPage = () => {
-    setShowOrderPage(true);
+  const handleDeleteProduct = (id) => {
+    setProducts((prev) => prev.filter((item) => item.id !== parseInt(id)));
+    setCart((prev) => prev.filter((item) => item.id !== parseInt(id)));
   };
 
-  const navigateToMainPage = () => {
-    setShowOrderPage(false);
+  const handleAddProduct = (newProduct) => {
+    setProducts((prev) => [
+      ...prev,
+      { ...newProduct, id: products.length * 999 + 1 },
+    ]);
+  };
+
+  const handleUpdateProduct = (id, updatedProduct) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === parseInt(id)
+          ? { ...product, ...updatedProduct }
+          : product
+      )
+    );
   };
 
   return (
-    <>
-      {showOrderPage ? (
-        <OrderPage cart={cart} navigateToMainPage={navigateToMainPage} />
-      ) : (
-        <>
-          <NavBar cart={cart} navigateToOrderPage={navigateToOrderPage} />
-          <Counters
-            products={PRODUCTS_DATA}
-            incrementCount={handleIncrementItemCount}
-            decrementCount={handleDecrementItemCount}
-            updateCart={handleUpdateItemCount}
-            cart={cart}
-          />
-        </>
-      )}
-    </>
+    <Router>
+      <NavBar cart={cart} products={products} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Counters
+              products={products}
+              incrementCount={handleIncrementItemCount}
+              decrementCount={handleDecrementItemCount}
+              updateCart={handleUpdateItemCount}
+              cart={cart}
+            />
+          }
+        />
+        <Route
+          path="/product-page"
+          element={
+            <ProductListPage
+              products={products}
+              onDelete={handleDeleteProduct}
+            />
+          }
+        />
+        <Route
+          path="/product/:id"
+          element={
+            <ProductForm
+              products={products}
+              updateProduct={handleUpdateProduct}
+            />
+          }
+        />
+        <Route
+          path="/product"
+          element={<ProductForm addProduct={handleAddProduct} />}
+        />
+        <Route path="/order-page" element={<OrderPage cart={cart} />} />
+      </Routes>
+    </Router>
   );
 }
 

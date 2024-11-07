@@ -9,7 +9,7 @@ const Counters = ({
   updateCart,
 }) => {
   return (
-    <div className="row d-flex flex-row justify-content-start align-items-center ms-1 mt-1">
+    <div className="row d-flex flex-row justify-content-start align-items-center ms-5">
       {products.map((product) => (
         <div
           className="col-sm-4 col-md-4 col-lg-3 col-xxl-2 pb-3"
