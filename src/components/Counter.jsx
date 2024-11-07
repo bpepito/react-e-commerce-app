@@ -26,25 +26,6 @@ const Counter = ({
     setInputValue(itemCount.toString());
   }, [itemCount]);
 
-  const handleIncrement = () => {
-    const newCount = itemCount + 1;
-    incrementCount({
-      ...product,
-      itemCount: newCount,
-      totalPrice: newCount * product.price,
-    });
-  };
-
-  const handleDecrement = () => {
-    if (itemCount > 0) {
-      const newCount = itemCount - 1;
-      decrementCount({
-        ...product,
-        itemCount: newCount,
-        totalPrice: newCount * product.price,
-      });
-    }
-  };
 
   const handleChange = (event) => {
     const value = event.target.value;
@@ -122,7 +103,11 @@ const Counter = ({
             <Button
               size="small"
               variant="contained"
-              onClick={handleDecrement}
+              onClick={() =>
+                decrementCount({
+                  ...product,
+                })
+              }
               style={{ width: "20px" }}
             >
               -
@@ -143,7 +128,11 @@ const Counter = ({
             <Button
               size="small"
               variant="contained"
-              onClick={handleIncrement}
+              onClick={() =>
+                incrementCount({
+                  ...product,
+                })
+              }
               style={{ width: "20px" }}
             >
               +
@@ -154,13 +143,11 @@ const Counter = ({
             size="small"
             variant="outlined"
             style={{ width: "150px" }}
-            onClick={() => {
+            onClick={() =>
               incrementCount({
                 ...product,
-                itemCount: 1,
-                totalPrice: product.price,
-              });
-            }}
+              })
+            }
           >
             <AddShoppingCartIcon
               style={{ fontSize: "10px", marginRight: "5px" }}
