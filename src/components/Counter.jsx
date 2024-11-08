@@ -104,9 +104,8 @@ const Counter = ({
               size="small"
               variant="contained"
               onClick={() =>
-                decrementCount({
-                  ...product,
-                })
+                decrementCount(product
+                )
               }
               style={{ width: "20px" }}
             >
@@ -129,9 +128,9 @@ const Counter = ({
               size="small"
               variant="contained"
               onClick={() =>
-                incrementCount({
-                  ...product,
-                })
+                incrementCount(
+                  product
+                )
               }
               style={{ width: "20px" }}
             >
@@ -144,9 +143,7 @@ const Counter = ({
             variant="outlined"
             style={{ width: "150px" }}
             onClick={() =>
-              incrementCount({
-                ...product,
-              })
+              incrementCount(product)
             }
           >
             <AddShoppingCartIcon
